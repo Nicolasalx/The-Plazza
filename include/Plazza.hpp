@@ -45,8 +45,8 @@ namespace Pla
 
     struct Order
     {
-        Pla::PizaType type;
-        Pla::PizaSize size;
+        Pla::PizaType type = Pla::PizaType::Regina;
+        Pla::PizaSize size = Pla::PizaSize::S;
     };
 
     static constexpr std::array<double, 4> coocking_time = {1000, 2000, 2000, 4000};

@@ -38,14 +38,19 @@ bool Pla::Cook::hasIngrediant(Pla::PizaType type, std::vector<int> &ingredient, 
 }
 
 void Pla::Cook::makePizza(double time_mult, Pla::PizaType type,
-    Pla::PizaSize size, std::vector<int> &ingredient, std::mutex &mutex, std::atomic_int &active_pizza)
+    Pla::PizaSize, std::vector<int> &ingredient, std::mutex &mutex, std::atomic_int &active_pizza,
+    std::atomic_bool *need_exit)
 {
-    while (!Pla::Cook::hasIngrediant(type, ingredient, mutex)) {
+//    std::cerr << "Wait for making a pizza." << int(type) << std::endl;
+    while (!Pla::Cook::hasIngrediant(type, ingredient, mutex) && !*need_exit) {
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
-    std::cout << "Currently making a pizza." << std::endl;
+    if (*need_exit) {
+        return;
+    }
+//    std::cerr << "Currently making a pizza." << std::endl;
     std::this_thread::sleep_for(
         std::chrono::milliseconds(long(Pla::coocking_time[int(std::log2(int(type)))] * time_mult)));
-    std::cout << "A pizza has been finished." << std::endl;
+//    std::cerr << "A pizza has been finished." << std::endl;
     --active_pizza;
 }

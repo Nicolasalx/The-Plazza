@@ -22,7 +22,7 @@ namespace Pla
         int nb_used_cook = 0;
 
         ComKitchen() = default;
-        ComKitchen(pid_t pid_) : pid(pid_) {};
+        ComKitchen(pid_t pid_) : pid(pid_), msg_queue() {};
     };
 
     class Reception

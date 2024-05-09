@@ -28,13 +28,17 @@ Pla::Reception::Reception(int argc, const char **argv) : exit_(false)
 
 void Pla::Reception::handleInput(const std::string &input)
 {
-    std::cout << "Get: \"" << input << "\"\n";
+    this->mutex_.lock();
+    std::cerr << "Get: \"" << input << "\"\n";
+    this->mutex_.unlock();
     /*
         TODO: - parse the input
         TODO: - add piza to make to "order_" queue
     */
     this->mutex_.lock();
-    order_.push(Pla::Order(Pla::PizaType::Regina, Pla::PizaSize::L));
+    for (size_t i = 0; i < 10; ++i) {
+        order_.push(Pla::Order(Pla::PizaType::Regina, Pla::PizaSize::L));
+    }
     this->mutex_.unlock();
 }
 

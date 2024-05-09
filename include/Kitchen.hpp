@@ -35,7 +35,7 @@ namespace Pla
 
     public:
         Kitchen(std::size_t nb_cook, double cook_time, long ing_repl_time, key_t msg_queue_key);
-        ~Kitchen();
+        ~Kitchen() = default;
     };
 }
 

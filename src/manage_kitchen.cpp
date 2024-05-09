@@ -14,8 +14,10 @@ void Pla::Reception::handleRecvMessage()
 
     for (auto it = this->kitchen_list_.begin(); it != this->kitchen_list_.end();)
     {
+        
         while (it->msg_queue.tryPop(msg)) {
-            if (msg.type == Pla::MessageType::CLOSE_KITCHEN) {
+            if (msg.getType() == Pla::MessageType::CLOSE_KITCHEN) {
+                std::cerr << "\e[91mKitchen " << it->pid << " closed !\e[0m" << std::endl;
                 this->kitchen_list_.erase(it++);
                 continue;
             }
@@ -26,13 +28,13 @@ void Pla::Reception::handleRecvMessage()
 
 void Pla::Reception::dispatchOrder()
 {
-    Pla::Message msg;
-
     for (Pla::ComKitchen &it : this->kitchen_list_)
     {
+        Pla::Message msg;
         it.msg_queue.push(Pla::Message(Pla::MessageType::GET_STATUS));
         it.msg_queue.pop(msg);
-        it.nb_used_cook = msg.cook_used;
+        it.nb_used_cook = msg.getCookUsed();
+        std::cerr << it.nb_used_cook << std::endl;
     }
     while (!this->order_.empty())
     {
@@ -42,12 +44,15 @@ void Pla::Reception::dispatchOrder()
                 return kitchen_1.nb_used_cook < kitchen_2.nb_used_cook;
             }
         );
-        if (this->kitchen_list_.front().nb_used_cook < (this->nb_cook_ * 2)) {
+        if (!this->kitchen_list_.empty() && this->kitchen_list_.front().nb_used_cook < (this->nb_cook_ * 2)) {
             this->kitchen_list_.front().msg_queue.push(
                 Pla::Message(Pla::MessageType::NEW_ORDER, this->order_.front()));
+            ++this->kitchen_list_.front().nb_used_cook;
             this->order_.pop();
         } else {
+            this->mutex_.unlock();
             createKitchen();
+            this->mutex_.lock();
         }
     }
 }
@@ -57,7 +62,6 @@ void Pla::Reception::manageKitchen()
     while (!this->exit_)
     {
         this->mutex_.lock();
-        std::cout << this->order_.size() << std::endl;
         this->handleRecvMessage();
         this->dispatchOrder();
         this->mutex_.unlock();
