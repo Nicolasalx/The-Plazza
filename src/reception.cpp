@@ -20,7 +20,7 @@ Pla::Reception::Reception(int argc, const char **argv) : exit_(false)
     this->nb_cook_ = std::stoi(argv[2]);
     this->ing_repl_time_ = std::stol(argv[3]);
     if (this->cooking_time_ < 0 ||
-        this->nb_cook_ <= 0 ||
+        this->nb_cook_ <= 0 || this->nb_cook_ > 500 ||
         this->ing_repl_time_ < 0) {
         throw my::tracked_exception("Invalid arg value.");
     }

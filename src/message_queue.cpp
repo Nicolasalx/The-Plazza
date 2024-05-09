@@ -11,7 +11,7 @@
 Pla::MessageQueue::MessageQueue()
 {
     std::ofstream file;
-    std::string charset = "abcdefghijklmnopqrstuvwxyz0123456789";
+    std::string charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     filename_ = "./msg_queue/";
     for (int i = 0; i < 32; ++i) {
