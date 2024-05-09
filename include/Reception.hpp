@@ -18,11 +18,12 @@ namespace Pla
     struct ComKitchen
     {
         pid_t pid;
-        Pla::MessageQueue msg_queue;
+        Pla::MessageQueue send_msg_queue;
+        Pla::MessageQueue recv_msg_queue;
         int nb_used_cook = 0;
 
         ComKitchen() = default;
-        ComKitchen(pid_t pid_) : pid(pid_), msg_queue() {};
+        ComKitchen(pid_t pid_) : pid(pid_), send_msg_queue(), recv_msg_queue() {};
     };
 
     class Reception

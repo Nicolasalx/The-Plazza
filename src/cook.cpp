@@ -43,6 +43,7 @@ void Pla::Cook::makePizza(double time_mult, Pla::PizaType type,
 {
 //    std::cerr << "Wait for making a pizza." << int(type) << std::endl;
     while (!Pla::Cook::hasIngrediant(type, ingredient, mutex) && !*need_exit) {
+        std::cout << "not enought" << std::endl;
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
     if (*need_exit) {

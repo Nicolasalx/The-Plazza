@@ -19,20 +19,21 @@
 
 namespace Pla
 {
-    class MessageQueue : public Pla::ISafeQueue<Pla::Message>
+    class MessageQueue
     {
     private:
         key_t key_;
         int id_;
+        std::string filename_;
 
     public:
         MessageQueue();
         MessageQueue(key_t key);
-        ~MessageQueue() override;
+        ~MessageQueue();
 
-        void push(Pla::Message msg) const override;
-        bool tryPop(Pla::Message &msg) const override;
-        bool pop(Pla::Message &msg) const override;
+        void push(Pla::Message msg) const;
+        bool tryPop(Pla::Message &msg) const;
+        bool pop(Pla::Message &msg) const;
         key_t getKey() const;
     };
 }

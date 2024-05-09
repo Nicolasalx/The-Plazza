@@ -6,10 +6,20 @@
 */
 
 #include "MessageQueue.hpp"
+#include <fstream>
 
 Pla::MessageQueue::MessageQueue()
 {
-    key_ = ftok("progfile", 65);
+    std::ofstream file;
+    std::string charset = "abcdefghijklmnopqrstuvwxyz0123456789";
+
+    filename_ = "./msg_queue/";
+    for (int i = 0; i < 32; ++i) {
+        filename_ += charset[std::rand() % charset.length()];
+    }
+    file.open(filename_);
+
+    key_ = ftok(filename_.c_str(), 65);
     id_ = msgget(key_, 0666 | IPC_CREAT);
 }
 
@@ -21,6 +31,9 @@ Pla::MessageQueue::MessageQueue(key_t key) : key_(key)
 Pla::MessageQueue::~MessageQueue()
 {
     msgctl(id_, IPC_RMID, NULL);
+    if (!filename_.empty()) {
+        std::remove(filename_.c_str());
+    }
 }
 
 void Pla::MessageQueue::push(Pla::Message msg) const
@@ -35,14 +48,7 @@ bool Pla::MessageQueue::tryPop(Pla::Message &msg) const
     Pla::PackedMessage packed_message;
     bool res = (msgrcv(id_, &packed_message, sizeof(Pla::PackedMessage) - sizeof(long), 1, IPC_NOWAIT) >= 0);
 
-    // std::cerr << res << "<- ret, cont -> "
-    //     << packed_message.type << packed_message.order_type
-    //     << packed_message.order_size << packed_message.cook_used << std::endl;
     msg = Pla::Message(packed_message);
-    // std::cerr << "\e[95mcont -> \e[0m"
-    //     << int(msg.getType()) << int(msg.getOrder().type)
-    //     << int(msg.getOrder().size) << int(msg.getCookUsed()) << std::endl;
-
     return res;
 }
 
@@ -51,13 +57,7 @@ bool Pla::MessageQueue::pop(Pla::Message &msg) const
     Pla::PackedMessage packed_message;
     bool res = (msgrcv(id_, &packed_message, sizeof(Pla::PackedMessage) - sizeof(long), 1, 0) >= 0);
 
-    // std::cerr << res << "<- ret, cont -> "
-    //     << packed_message.type << packed_message.order_type
-    //     << packed_message.order_size << packed_message.cook_used << std::endl;
     msg = Pla::Message(packed_message);
-        // std::cerr << "\e[95mcont -> \e[0m"
-        // << int(msg.getType()) << int(msg.getOrder().type)
-        // << int(msg.getOrder().size) << int(msg.getCookUsed()) << std::endl;
     return res;
 }
 

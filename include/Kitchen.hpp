@@ -26,7 +26,8 @@ namespace Pla
         long ing_repl_time_;
         std::mutex mutex_;
         Pla::Clock clock_;
-        std::unique_ptr<Pla::MessageQueue> msg_queue_;
+        std::unique_ptr<Pla::MessageQueue> send_msg_queue_;
+        std::unique_ptr<Pla::MessageQueue> recv_msg_queue_;
         std::atomic_bool exit_;
 
         void loop();
@@ -34,7 +35,7 @@ namespace Pla
         void refillIngredient();
 
     public:
-        Kitchen(std::size_t nb_cook, double cook_time, long ing_repl_time, key_t msg_queue_key);
+        Kitchen(std::size_t nb_cook, double cook_time, long ing_repl_time, key_t send_msg_key, key_t recv_msg_key);
         ~Kitchen() = default;
     };
 }

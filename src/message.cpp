@@ -18,7 +18,6 @@ Pla::Message::Message(Pla::PackedMessage &packed_message)
 Pla::Message::Message(Pla::MessageType type)
 {
     this->msg_data.type_ = type;
-    // maybe init order
 }
 
 Pla::Message::Message(Pla::MessageType type, Pla::Order order)

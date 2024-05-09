@@ -8,14 +8,15 @@
 #include "Kitchen.hpp"
 #include "my_tracked_exception.hpp"
 
-Pla::Kitchen::Kitchen(std::size_t nb_cook, double cook_time, long ing_repl_time, key_t msg_queue_key)
+Pla::Kitchen::Kitchen(std::size_t nb_cook, double cook_time, long ing_repl_time, key_t send_msg_key, key_t recv_msg_key)
     : cook_time_(cook_time), active_pizza_(0), ing_repl_time_(ing_repl_time), exit_(false)
 {
     cook_.launch(nb_cook);
     ingredient_.resize(static_cast<std::size_t>(Pla::Ingredient::NbIngredient), 5);
     clock_.setCooldown(std::chrono::milliseconds(5000));
     clock_.start();
-    msg_queue_ = std::make_unique<Pla::MessageQueue>(msg_queue_key);
+    send_msg_queue_ = std::make_unique<Pla::MessageQueue>(send_msg_key);
+    recv_msg_queue_ = std::make_unique<Pla::MessageQueue>(recv_msg_key);
     loop();
 }
 
@@ -42,9 +43,6 @@ void Pla::Kitchen::handleNewMessage(const Pla::Message &msg)
             this->cook_time_, msg.getOrder().type, msg.getOrder().size,
             this->ingredient_, this->mutex_, this->active_pizza_, &this->exit_);});
         break;
-    case Pla::MessageType::GET_STATUS:
-        this->msg_queue_->push(Pla::Message(Pla::MessageType::GET_STATUS, this->active_pizza_));
-        break;
     default:
         break;
     }
@@ -59,17 +57,18 @@ void Pla::Kitchen::loop()
         if (this->active_pizza_ > 0) {
             this->clock_.reset();
         }
-        while (this->msg_queue_->tryPop(msg)) {
+        while (this->recv_msg_queue_->tryPop(msg)) {
             if (msg.getType() == Pla::MessageType::CLOSE_KITCHEN) {
                 this->exit_ = true;
+                this->cook_.stop();
+                this->send_msg_queue_->push(Pla::Message(Pla::MessageType::CLOSE_KITCHEN));
                 return;
             }
             handleNewMessage(msg);
         }
+        this->send_msg_queue_->push(Pla::Message(Pla::MessageType::GET_STATUS, this->active_pizza_));
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
     }
     this->exit_ = true;
-    std::cout << "push close kitchen" << std::endl;
-    this->msg_queue_->push(Pla::Message(Pla::MessageType::CLOSE_KITCHEN));
-    std::this_thread::sleep_for(std::chrono::milliseconds(2));
+    this->send_msg_queue_->push(Pla::Message(Pla::MessageType::CLOSE_KITCHEN));
 }

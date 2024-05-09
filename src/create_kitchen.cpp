@@ -26,7 +26,8 @@ void Pla::Reception::createKitchen()
             nb_cook_,
             cooking_time_,
             ing_repl_time_,
-            this->kitchen_list_.back().msg_queue.getKey()
+            this->kitchen_list_.back().recv_msg_queue.getKey(),
+            this->kitchen_list_.back().send_msg_queue.getKey()
         );
         std::exit(0);
     }
@@ -45,8 +46,13 @@ void Pla::Reception::closeAllKitchen()
     while (!this->kitchen_list_.empty()) {
         pid = waitpid(this->kitchen_list_.back().pid, &status, WNOHANG);
         if (pid == 0) {
-            kill(pid, SIGKILL);
-            this->kitchen_list_.back().msg_queue.push(Pla::Message(Pla::MessageType::CLOSE_KITCHEN));
+            //kill(pid, SIGKILL);
+            this->kitchen_list_.back().send_msg_queue.push(Pla::Message(Pla::MessageType::CLOSE_KITCHEN));
+
+            Pla::Message msg;
+            do {
+                this->kitchen_list_.back().recv_msg_queue.pop(msg);
+            } while (msg.getType() != Pla::MessageType::CLOSE_KITCHEN);
             this->kitchen_list_.pop_back();
         } else if (pid > 0) {
             this->kitchen_list_.pop_back();

@@ -6,6 +6,7 @@
 */
 
 #include "ThreadPool.hpp"
+#include <iostream>
 
 void Pla::ThreadPool::executeWork()
 {
@@ -45,6 +46,9 @@ void Pla::ThreadPool::launch(std::size_t nb_thread)
 void Pla::ThreadPool::stop()
 {
     this->exit_ = true;
+    this->mutex_.lock();
+    this->new_work_.notify_all();
+    this->mutex_.unlock();
     for (std::thread &it : this->thread_) {
         it.join();
     }
@@ -52,5 +56,7 @@ void Pla::ThreadPool::stop()
 
 Pla::ThreadPool::~ThreadPool()
 {
-    stop();
+    if (!this->exit_) {
+        stop();
+    }
 }

@@ -24,6 +24,7 @@ Pla::Reception::Reception(int argc, const char **argv) : exit_(false)
         this->ing_repl_time_ < 0) {
         throw my::tracked_exception("Invalid arg value.");
     }
+    std::srand(std::time(nullptr));
 }
 
 void Pla::Reception::handleInput(const std::string &input)
