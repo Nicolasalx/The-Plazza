@@ -20,6 +20,7 @@ namespace Pla
         pid_t pid;
         Pla::MessageQueue send_msg_queue;
         Pla::MessageQueue recv_msg_queue;
+        std::vector<Pla::Order> order_;
         int nb_used_cook = 0;
 
         ComKitchen() = default;
@@ -32,6 +33,7 @@ namespace Pla
         double cooking_time_;
         int nb_cook_;
         long ing_repl_time_;
+        int order_index_ = 0;
         std::list<Pla::ComKitchen> kitchen_list_;
         std::queue<Pla::Order> order_;
         std::mutex mutex_;
@@ -45,6 +47,7 @@ namespace Pla
         void handleInput(const std::string &input);
         void manageKitchen();
         void handleRecvMessage();
+        void handleRecvStatus(const std::list<Pla::ComKitchen>::iterator &it, const Pla::Message &msg);
         void dispatchOrder();
         void createKitchen();
         void closeAllKitchen();

@@ -8,6 +8,21 @@
 #include "Reception.hpp"
 #include "Kitchen.hpp"
 
+void Pla::Reception::handleRecvStatus(const std::list<Pla::ComKitchen>::iterator &it, const Pla::Message &msg)
+{
+    Pla::Message status_msg;
+
+    if (msg.getType() != Pla::MessageType::START_STATUS) {
+        return;
+    }
+    it->nb_used_cook = msg.getCookUsed();
+    it->order_.clear();
+    for (int i = 0; i < it->nb_used_cook; ++i) {
+        it->recv_msg_queue.pop(status_msg);
+        it->order_.push_back(status_msg.getOrder());
+    }
+}
+
 void Pla::Reception::handleRecvMessage()
 {
     Pla::Message msg;
@@ -21,10 +36,13 @@ void Pla::Reception::handleRecvMessage()
                 std::cerr << "\e[91mKitchen " << it->pid << " closed !\e[0m" << std::endl;
                 to_close.push(it);
                 break;
-            }
-            if (msg.getType() == Pla::MessageType::GET_STATUS) {
-                it->nb_used_cook = msg.getCookUsed();
-                std::cerr << "Kitchen: " << this->kitchen_list_.size() << ", Nb cook used: " << it->nb_used_cook << std::endl;
+            } else if (msg.getType() == Pla::MessageType::PIZZA_DONE) {
+                std::cerr << "\e[93mOrder " << msg.getOrder().nb
+                    << ": The " << msg.getOrder().type
+                    << " of size: " << msg.getOrder().size
+                    << " done.\e[0m" << std::endl;
+            } else {
+                handleRecvStatus(it, msg);
             }
         }
     }
@@ -67,6 +85,6 @@ void Pla::Reception::manageKitchen()
     {
         this->handleRecvMessage();
         this->dispatchOrder();
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::this_thread::sleep_for(std::chrono::milliseconds(33));
     }
 }

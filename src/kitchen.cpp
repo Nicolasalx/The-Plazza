@@ -9,7 +9,7 @@
 #include "my_tracked_exception.hpp"
 
 Pla::Kitchen::Kitchen(std::size_t nb_cook, double cook_time, long ing_repl_time, key_t send_msg_key, key_t recv_msg_key)
-    : cook_time_(cook_time), active_pizza_(0), ing_repl_time_(ing_repl_time), exit_(false)
+    : cook_time_(cook_time), ing_repl_time_(ing_repl_time), has_order_(false), exit_(false)
 {
     cook_.launch(nb_cook);
     ingredient_.resize(static_cast<std::size_t>(Pla::Ingredient::NbIngredient), 5);
@@ -35,26 +35,49 @@ void Pla::Kitchen::refillIngredient()
 
 void Pla::Kitchen::handleNewMessage(const Pla::Message &msg)
 {
-    switch (msg.getType())
+    if (msg.getType() == Pla::MessageType::NEW_ORDER)
     {
-    case Pla::MessageType::NEW_ORDER:
-        ++this->active_pizza_;
-        this->cook_.addWork([this, msg]{Cook::makePizza(
-            this->cook_time_, msg.getOrder().type, msg.getOrder().size,
-            this->ingredient_, this->mutex_, this->active_pizza_, &this->exit_);});
-        break;
-    default:
-        break;
+        this->mutex_.lock();
+        this->pizza_.push_back(msg.getOrder());
+        Pla::Order &pizza_to_make = this->pizza_.back();
+        this->mutex_.unlock();
+
+        this->cook_.addWork([&]{Cook::makePizza(
+            this->cook_time_, pizza_to_make,
+            this->ingredient_, this->mutex_, &this->exit_);});
     }
+}
+
+void Pla::Kitchen::sendStatus()
+{
+    std::queue<std::list<Pla::Order>::iterator> to_remove;
+
+    this->mutex_.lock();
+    for (auto it = this->pizza_.begin(); it != this->pizza_.end(); ++it) {
+        if (it->state == Pla::PizzaState::DONE) {
+            this->send_msg_queue_->push(Pla::Message(Pla::MessageType::PIZZA_DONE, *it));
+            to_remove.push(it);
+        }
+    }
+    while (!to_remove.empty()) {
+        this->pizza_.erase(to_remove.front());
+        to_remove.pop();
+    }
+    this->send_msg_queue_->push(Pla::Message(Pla::MessageType::START_STATUS, this->pizza_.size()));
+    for (const Pla::Order &it : this->pizza_) {
+        this->send_msg_queue_->push(Pla::Message(Pla::MessageType::PIZZA_STATUS, it));
+    }
+    this->has_order_ = (!this->pizza_.empty());
+    this->mutex_.unlock();
 }
 
 void Pla::Kitchen::loop()
 {
     Pla::Message msg;
 
-    while (!this->clock_.isElapsed() || this->active_pizza_ > 0)
+    while (!this->clock_.isElapsed() || this->has_order_)
     {
-        if (this->active_pizza_ > 0) {
+        if (this->has_order_) {
             this->clock_.reset();
         }
         while (this->recv_msg_queue_->tryPop(msg)) {
@@ -66,8 +89,8 @@ void Pla::Kitchen::loop()
             }
             handleNewMessage(msg);
         }
-        this->send_msg_queue_->push(Pla::Message(Pla::MessageType::GET_STATUS, this->active_pizza_));
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        sendStatus();
+        std::this_thread::sleep_for(std::chrono::milliseconds(33));
     }
     this->exit_ = true;
     this->send_msg_queue_->push(Pla::Message(Pla::MessageType::CLOSE_KITCHEN));

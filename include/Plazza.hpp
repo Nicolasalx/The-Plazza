@@ -9,11 +9,12 @@
     #define PLAZZA_HPP_
 
     #include <thread>
+    #include <iostream>
     #include "Clock.hpp"
 
 namespace Pla
 {
-    enum class PizaType
+    enum class PizzaType
     {
         Regina = 1,
         Margarita = 2,
@@ -21,7 +22,7 @@ namespace Pla
         Fantasia = 8
     };
 
-    enum class PizaSize
+    enum class PizzaSize
     {
         S = 1,
         M = 2,
@@ -43,13 +44,26 @@ namespace Pla
         NbIngredient
     };
 
+    enum class PizzaState
+    {
+        WAITING_TO_BE_COOK,
+        WAITING_INGREDIENT,
+        CURRENTLY_COOKING,
+        DONE
+    };
+
     struct Order
     {
-        Pla::PizaType type = Pla::PizaType::Regina;
-        Pla::PizaSize size = Pla::PizaSize::S;
+        int nb = 0;
+        Pla::PizzaType type = Pla::PizzaType::Regina;
+        Pla::PizzaSize size = Pla::PizzaSize::S;
+        Pla::PizzaState state = Pla::PizzaState::WAITING_TO_BE_COOK;
     };
 
     static constexpr std::array<double, 4> coocking_time = {1000, 2000, 2000, 4000};
 }
+
+std::ostream &operator << (std::ostream &output_stream, const Pla::PizzaType &pizza_type);
+std::ostream &operator << (std::ostream &output_stream, const Pla::PizzaSize &pizza_size);
 
 #endif /* !PLAZZA_HPP_ */

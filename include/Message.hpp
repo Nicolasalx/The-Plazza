@@ -16,7 +16,9 @@ namespace Pla
     enum class MessageType {
         NOT_INIT,
         NEW_ORDER,
-        GET_STATUS,
+        START_STATUS,
+        PIZZA_STATUS,
+        PIZZA_DONE,
         CLOSE_KITCHEN
     };
 
@@ -24,8 +26,10 @@ namespace Pla
     {
         long mtype = 1;
         long type = 0;
+        long order_nb = 0;
         long order_type = 0;
         long order_size = 0;
+        long order_state = 0;
         long cook_used = 0;
     };
 

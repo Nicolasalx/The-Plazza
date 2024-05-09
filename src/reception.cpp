@@ -20,7 +20,7 @@ Pla::Reception::Reception(int argc, const char **argv) : exit_(false)
     this->nb_cook_ = std::stoi(argv[2]);
     this->ing_repl_time_ = std::stol(argv[3]);
     if (this->cooking_time_ < 0 ||
-        this->nb_cook_ <= 0 || this->nb_cook_ > 500 ||
+        this->nb_cook_ <= 0 ||
         this->ing_repl_time_ < 0) {
         throw my::tracked_exception("Invalid arg value.");
     }
@@ -29,17 +29,22 @@ Pla::Reception::Reception(int argc, const char **argv) : exit_(false)
 
 void Pla::Reception::handleInput(const std::string &input)
 {
+    Pla::Order new_order;
+
     this->mutex_.lock();
     std::cerr << "Get: \"" << input << "\"\n";
     this->mutex_.unlock();
-    /*
-        TODO: - parse the input
-        TODO: - add piza to make to "order_" queue
-    */
+
+    //    TODO: - parse the input
+
     this->mutex_.lock();
-    for (size_t i = 0; i < 10; ++i) {
-        order_.push(Pla::Order(Pla::PizaType::Regina, Pla::PizaSize::L));
-    }
+    // ! Data to fill with parsing :
+    new_order.nb = this->order_index_++;
+    new_order.type = Pla::PizzaType::Regina;
+    new_order.size = Pla::PizzaSize::L;
+    new_order.state = Pla::PizzaState::WAITING_TO_BE_COOK;
+    // ! ---------------------------
+    order_.push(new_order);
     this->mutex_.unlock();
 }
 

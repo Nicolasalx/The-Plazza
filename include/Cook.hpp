@@ -17,9 +17,9 @@ namespace Pla
     public:
         ~Cook() = default;
 
-        static bool hasIngrediant(Pla::PizaType type, std::vector<int> &ingredient, std::mutex &mutex);
-        static void makePizza(double time_mult, Pla::PizaType type, Pla::PizaSize size,
-            std::vector<int> &ingredient, std::mutex &mutex, std::atomic_int &active_pizza, std::atomic_bool *need_exit);
+        static bool hasIngrediant(Pla::PizzaType type, std::vector<int> &ingredient, std::mutex &mutex);
+        static void makePizza(double time_mult, Pla::Order &order, std::vector<int> &ingredient,
+            std::mutex &mutex, std::atomic_bool *need_exit);
     };
 }
 
