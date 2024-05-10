@@ -33,14 +33,20 @@ void Pla::Reception::handleRecvMessage()
     {
         while (it->recv_msg_queue.tryPop(msg)) {
             if (msg.getType() == Pla::MessageType::CLOSE_KITCHEN) {
-                std::cerr << "\e[91mKitchen " << it->pid << " closed !\e[0m" << std::endl;
+                std::cout << "\e[91mKitchen " << it->pid << " closed !\e[0m\n";
                 to_close.push(it);
                 break;
             } else if (msg.getType() == Pla::MessageType::PIZZA_DONE) {
-                std::cerr << "\e[93mOrder " << msg.getOrder().nb
+                std::cout << "\e[93mOrder " << msg.getOrder().nb
                     << ": The " << msg.getOrder().type
                     << " of size: " << msg.getOrder().size
-                    << " done.\e[0m" << std::endl;
+                    << " done.\e[0m\n";
+                if (this->log_file_.is_open()) {
+                    this->log_file_ << "Order " << msg.getOrder().nb
+                        << ": The " << msg.getOrder().type
+                        << " of size: " << msg.getOrder().size
+                        << " done.\n";
+                }
             } else {
                 handleRecvStatus(it, msg);
             }

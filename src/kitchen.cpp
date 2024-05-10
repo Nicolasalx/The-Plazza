@@ -40,11 +40,12 @@ void Pla::Kitchen::handleNewMessage(const Pla::Message &msg)
         this->mutex_.lock();
         this->pizza_.push_back(msg.getOrder());
         Pla::Order &pizza_to_make = this->pizza_.back();
+        std::vector<int> &ing = this->ingredient_;
         this->mutex_.unlock();
 
         this->cook_.addWork([&]{Cook::makePizza(
             this->cook_time_, pizza_to_make,
-            this->ingredient_, this->mutex_, &this->exit_);});
+            ing, this->mutex_, &this->exit_);});
     }
 }
 
@@ -74,6 +75,7 @@ void Pla::Kitchen::sendStatus()
 void Pla::Kitchen::loop()
 {
     Pla::Message msg;
+    std::thread refill_thread([this]{refillIngredient();});
 
     while (!this->clock_.isElapsed() || this->has_order_)
     {
@@ -84,6 +86,7 @@ void Pla::Kitchen::loop()
             if (msg.getType() == Pla::MessageType::CLOSE_KITCHEN) {
                 this->exit_ = true;
                 this->cook_.stop();
+                refill_thread.join();
                 this->send_msg_queue_->push(Pla::Message(Pla::MessageType::CLOSE_KITCHEN));
                 return;
             }
@@ -93,5 +96,7 @@ void Pla::Kitchen::loop()
         std::this_thread::sleep_for(std::chrono::milliseconds(33));
     }
     this->exit_ = true;
+    this->cook_.stop();
+    refill_thread.join();
     this->send_msg_queue_->push(Pla::Message(Pla::MessageType::CLOSE_KITCHEN));
 }

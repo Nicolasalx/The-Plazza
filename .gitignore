@@ -22,6 +22,7 @@ plazza
 \#*#
 .cache
 log.bin
+reception.log
 
 # ? vscode
 .vscode/

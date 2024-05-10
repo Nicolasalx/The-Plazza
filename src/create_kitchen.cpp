@@ -33,7 +33,7 @@ void Pla::Reception::createKitchen()
     }
 
     this->mutex_.lock();
-    std::cerr << "\e[92mKitchen " << pid << " created !\e[0m" << std::endl;
+    std::cout << "\e[92mKitchen " << pid << " created !\e[0m" << std::endl;
     this->kitchen_list_.back().pid = pid;
     this->mutex_.unlock();
 }

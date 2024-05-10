@@ -25,6 +25,10 @@ Pla::Reception::Reception(int argc, const char **argv) : exit_(false)
         throw my::tracked_exception("Invalid arg value.");
     }
     std::srand(std::time(nullptr));
+    this->log_file_.open("reception.log");
+    if (!this->log_file_.is_open()) {
+        throw my::tracked_exception("Fail to open logfile.");
+    }
 }
 
 void Pla::Reception::handleInput(const std::string &input)
@@ -46,6 +50,9 @@ void Pla::Reception::handleInput(const std::string &input)
     // ! ---------------------------
     order_.push(new_order);
     this->mutex_.unlock();
+
+    // ! Or If input == "status" call status
+    displayStatus();
 }
 
 void Pla::Reception::openPlazza()

@@ -12,6 +12,7 @@
     #include "MessageQueue.hpp"
     #include <list>
     #include <queue>
+    #include <fstream>
 
 namespace Pla
 {
@@ -38,6 +39,7 @@ namespace Pla
         std::queue<Pla::Order> order_;
         std::mutex mutex_;
         std::atomic_bool exit_;
+        std::ofstream log_file_;
 
     public:
         Reception(int argc, const char **argv);
@@ -49,6 +51,7 @@ namespace Pla
         void handleRecvMessage();
         void handleRecvStatus(const std::list<Pla::ComKitchen>::iterator &it, const Pla::Message &msg);
         void dispatchOrder();
+        void displayStatus();
         void createKitchen();
         void closeAllKitchen();
     };
