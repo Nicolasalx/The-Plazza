@@ -19,7 +19,7 @@ namespace Pla
 
         static bool consumeIngrediant(Pla::PizzaType type, std::vector<int> &ingredient, std::mutex &mutex);
         static void makePizza(double time_mult, Pla::Order &order, std::vector<int> &ingredient,
-            std::mutex &mutex, std::atomic_bool *need_exit);
+            std::mutex &mutex, std::atomic_bool &need_exit);
     };
 }
 

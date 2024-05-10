@@ -45,7 +45,7 @@ void Pla::Kitchen::handleNewMessage(const Pla::Message &msg)
 
         this->cook_.addWork([&]{Cook::makePizza(
             this->cook_time_, pizza_to_make,
-            ing, this->mutex_, &this->exit_);});
+            ing, this->mutex_, this->exit_);});
     }
 }
 

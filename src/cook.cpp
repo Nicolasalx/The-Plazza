@@ -64,15 +64,15 @@ bool Pla::Cook::consumeIngrediant(Pla::PizzaType type, std::vector<int> &ingredi
 
 void Pla::Cook::makePizza(double time_mult, Pla::Order &order,
     std::vector<int> &ingredient, std::mutex &mutex,
-    std::atomic_bool *need_exit)
+    std::atomic_bool &need_exit)
 {
     mutex.lock();
     order.state = Pla::PizzaState::WAITING_INGREDIENT;
     mutex.unlock();
-    while (!Pla::Cook::consumeIngrediant(order.type, ingredient, mutex) && !*need_exit) {
+    while (!Pla::Cook::consumeIngrediant(order.type, ingredient, mutex) && !need_exit) {
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
-    if (*need_exit) {
+    if (need_exit) {
         return;
     }
     mutex.lock();
