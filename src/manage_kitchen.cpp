@@ -37,12 +37,12 @@ void Pla::Reception::handleRecvMessage()
                 to_close.push(it);
                 break;
             } else if (msg.getType() == Pla::MessageType::PIZZA_DONE) {
-                std::cout << "\e[93mOrder " << msg.getOrder().nb
+                std::cout << "\e[94mKitchen " << it->pid << ": Order " << msg.getOrder().nb
                     << ": The " << msg.getOrder().type
                     << " of size: " << msg.getOrder().size
                     << " done.\e[0m\n";
                 if (this->log_file_.is_open()) {
-                    this->log_file_ << "Order " << msg.getOrder().nb
+                    this->log_file_ << "Kitchen " << it->pid << ": Order " << msg.getOrder().nb
                         << ": The " << msg.getOrder().type
                         << " of size: " << msg.getOrder().size
                         << " done.\n";

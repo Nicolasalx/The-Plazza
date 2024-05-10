@@ -11,6 +11,9 @@ void Pla::Reception::displayStatus()
 {
     this->mutex_.lock();
     std::cout << "------\n";
+    if (this->kitchen_list_.empty()) {
+        std::cout << "\e[90m[NO KITCHEN]\e[0m\n";
+    }
     for (const Pla::ComKitchen &kitchen : this->kitchen_list_) {
         std::cout << "Kitchen " << kitchen.pid << ":\n";
         int nb_cook_disp = 0;

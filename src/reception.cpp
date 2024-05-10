@@ -35,24 +35,23 @@ void Pla::Reception::handleInput(const std::string &input)
 {
     Pla::Order new_order;
 
-    this->mutex_.lock();
     std::cerr << "Get: \"" << input << "\"\n";
-    this->mutex_.unlock();
 
     //    TODO: - parse the input
 
-    this->mutex_.lock();
-    // ! Data to fill with parsing :
-    new_order.nb = this->order_index_++;
-    new_order.type = Pla::PizzaType::Regina;
-    new_order.size = Pla::PizzaSize::L;
-    new_order.state = Pla::PizzaState::WAITING_TO_BE_COOK;
-    // ! ---------------------------
-    order_.push(new_order);
-    this->mutex_.unlock();
-
-    // ! Or If input == "status" call status
-    displayStatus();
+    if (input == "status") {
+        displayStatus();
+    } else {
+        this->mutex_.lock();
+        // ! Data to fill with parsing :
+        new_order.nb = this->order_index_++;
+        new_order.type = Pla::PizzaType::Regina;
+        new_order.size = Pla::PizzaSize::L;
+        new_order.state = Pla::PizzaState::WAITING_TO_BE_COOK;
+        // ! ---------------------------
+        order_.push(new_order);
+        this->mutex_.unlock();
+    }
 }
 
 void Pla::Reception::openPlazza()
