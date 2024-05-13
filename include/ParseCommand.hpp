@@ -15,6 +15,11 @@
 
 namespace Pla {
     class ParseCommand {
+        enum command_state_e {
+            NAME,
+            SIZE,
+            NUMBER
+        };
         public:
             std::vector<Order> parsingCommand(const std::string &input, int &orderCommand);
             void toLowerCase(std::string &str);
