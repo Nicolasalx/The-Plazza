@@ -24,6 +24,8 @@ std::ostream &operator << (std::ostream &output_stream, const Pla::PizzaType &pi
         case Pla::PizzaType::Fantasia:
             output_stream << "Fantasia";
             break;
+        default:
+            break;
     }
     return output_stream;
 }
@@ -46,6 +48,8 @@ std::ostream &operator << (std::ostream &output_stream, const Pla::PizzaSize &pi
             break;
         case Pla::PizzaSize::XXL:
             output_stream << "XXL";
+            break;
+        default:
             break;
     }
     return output_stream;
