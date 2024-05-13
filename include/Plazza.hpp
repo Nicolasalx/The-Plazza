@@ -51,16 +51,6 @@ namespace Pla
         CURRENTLY_COOKING,
         DONE
     };
-
-    struct Order
-    {
-        int nb = 0;
-        Pla::PizzaType type = Pla::PizzaType::Regina;
-        Pla::PizzaSize size = Pla::PizzaSize::S;
-        Pla::PizzaState state = Pla::PizzaState::WAITING_TO_BE_COOK;
-    };
-
-    static constexpr std::array<double, 4> coocking_time = {1000, 2000, 2000, 4000};
 }
 
 std::ostream &operator << (std::ostream &output_stream, const Pla::PizzaType &pizza_type);

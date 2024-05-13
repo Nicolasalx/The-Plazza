@@ -10,6 +10,8 @@
 
     #include "Plazza.hpp"
     #include <cstring>
+    #include "APizza.hpp"
+    #include "Order.hpp"
 
 namespace Pla
 {

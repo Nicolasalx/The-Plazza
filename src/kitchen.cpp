@@ -55,7 +55,7 @@ void Pla::Kitchen::sendStatus()
 
     this->mutex_.lock();
     for (auto it = this->pizza_.begin(); it != this->pizza_.end(); ++it) {
-        if (it->state == Pla::PizzaState::DONE) {
+        if (it->pizza.getState() == Pla::PizzaState::DONE) {
             this->send_msg_queue_->push(Pla::Message(Pla::MessageType::PIZZA_DONE, *it));
             to_remove.push(it);
         }
