@@ -7,6 +7,7 @@
 
 #include "Plazza.hpp"
 
+
 std::ostream &operator << (std::ostream &output_stream, const Pla::PizzaType &pizza_type)
 {
     switch(pizza_type)

@@ -9,8 +9,6 @@
     #define COOK_HPP_
 
     #include "Plazza.hpp"
-    #include "APizza.hpp"
-    #include "Order.hpp"
 
 namespace Pla
 {
@@ -19,7 +17,7 @@ namespace Pla
     public:
         ~Cook() = default;
 
-        static bool consumeIngrediant(const Pla::APizza &pizza, std::vector<int> &ingredient, std::mutex &mutex);
+        static bool consumeIngrediant(Pla::PizzaType type, std::vector<int> &ingredient, std::mutex &mutex);
         static void makePizza(double time_mult, Pla::Order &order, std::vector<int> &ingredient,
             std::mutex &mutex, std::atomic_bool &need_exit);
     };

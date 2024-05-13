@@ -16,7 +16,6 @@
 #include "Reception.hpp"
 #include "MessageQueue.hpp"
 #include "Kitchen.hpp"
-#include "Regina.hpp"
 
 int main(int argc, const char *argv[])
 {

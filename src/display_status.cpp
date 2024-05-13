@@ -12,11 +12,11 @@ void Pla::Reception::displayCookWork(const Pla::ComKitchen &kitchen) const
     int nb_cook_disp = 0;
 
     for (const Pla::Order &order : kitchen.order_) {
-        if (order.pizza.getState() == Pla::PizzaState::WAITING_INGREDIENT
-        || order.pizza.getState() == Pla::PizzaState::CURRENTLY_COOKING) {
+        if (order.state == Pla::PizzaState::WAITING_INGREDIENT
+        || order.state == Pla::PizzaState::CURRENTLY_COOKING) {
             std::cout << "    Cook " << nb_cook_disp << ": Order " << order.nb
-                << ": " << order.pizza.getType() << ' ' << order.pizza.getSize()
-                << ' ' << order.pizza.getState() << '\n';
+                << ": " << order.type << ' ' << order.size
+                << ' ' << order.state << '\n';
             ++nb_cook_disp;
         }
     }
@@ -31,9 +31,9 @@ void Pla::Reception::displayWaitingOrder(const Pla::ComKitchen &kitchen)
     size_t nb_waiting = 0;
 
     for (const Pla::Order &order : kitchen.order_) {
-        if (order.pizza.getState() == Pla::PizzaState::WAITING_TO_BE_COOK) {
+        if (order.state == Pla::PizzaState::WAITING_TO_BE_COOK) {
             std::cout << "    Order " << order.nb <<
-                ": " << order.pizza.getType() << ' ' << order.pizza.getSize() << '\n';
+                ": " << order.type << ' ' << order.size << '\n';
             ++nb_waiting;
         }
     }

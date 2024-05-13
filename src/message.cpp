@@ -6,16 +6,14 @@
 */
 
 #include "Message.hpp"
-#include "PizzaFactory.hpp"
 
 Pla::Message::Message(Pla::PackedMessage &packed_message)
 {
     this->msg_data.type_ = static_cast<Pla::MessageType>(packed_message.type);
     this->msg_data.order_.nb = static_cast<int>(packed_message.order_nb);
-    this->msg_data.order_.pizza = Pla::PizzaFactory::createPizza(
-        static_cast<Pla::PizzaType>(packed_message.order_type),
-        static_cast<Pla::PizzaSize>(packed_message.order_size),
-        static_cast<Pla::PizzaState>(packed_message.order_state));
+    this->msg_data.order_.state = static_cast<Pla::PizzaState>(packed_message.order_state);
+    this->msg_data.order_.type = static_cast<Pla::PizzaType>(packed_message.order_type);
+    this->msg_data.order_.size = static_cast<Pla::PizzaSize>(packed_message.order_size);
     this->msg_data.cook_used_ = static_cast<int>(packed_message.cook_used);
 }
 
@@ -57,9 +55,9 @@ Pla::PackedMessage Pla::Message::pack() const
 
     packed_message.type = static_cast<long>(this->msg_data.type_);
     packed_message.order_nb = static_cast<long>(this->msg_data.order_.nb);
-    packed_message.order_state = static_cast<long>(this->msg_data.order_.pizza.getState());
-    packed_message.order_type = static_cast<long>(this->msg_data.order_.pizza.getType());
-    packed_message.order_size = static_cast<long>(this->msg_data.order_.pizza.getSize());
+    packed_message.order_state = static_cast<long>(this->msg_data.order_.state);
+    packed_message.order_type = static_cast<long>(this->msg_data.order_.type);
+    packed_message.order_size = static_cast<long>(this->msg_data.order_.size);
     packed_message.cook_used = static_cast<long>(this->msg_data.cook_used_);
     return packed_message;
 }
