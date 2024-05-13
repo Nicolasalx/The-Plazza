@@ -13,8 +13,15 @@
     #include <cctype>
     #include "Plazza.hpp"
 
-namespace Pla {
-    class ParseCommand {
+namespace Pla
+{
+    enum command_state_e {
+        NAME,
+        NUMBER,
+        SIZE
+    };
+    class ParseCommand
+    {
         public:
             std::vector<Order> parsingCommand(const std::string &input, int &orderCommand);
             void toLowerCase(std::string &str);

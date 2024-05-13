@@ -36,6 +36,7 @@ namespace Pla
         void handleNewMessage(const Pla::Message &msg);
         void refillIngredient();
         void sendStatus();
+        void sendIngredient();
 
     public:
         Kitchen(std::size_t nb_cook, double cook_time, long ing_repl_time, key_t send_msg_key, key_t recv_msg_key);

@@ -42,6 +42,13 @@ void Pla::Reception::displayWaitingOrder(const Pla::ComKitchen &kitchen)
     }
 }
 
+void Pla::Reception::displayIngredient(const Pla::ComKitchen &kitchen) const
+{
+    for (size_t i = 0; i < size_t(Pla::Ingredient::NbIngredient); ++i) {
+        std::cout << "    " << Pla::Ingredient(i) << ": " << kitchen.ingredient[i] << '\n';
+    }
+}
+
 void Pla::Reception::displayStatus()
 {
     this->mutex_.lock();
@@ -51,6 +58,8 @@ void Pla::Reception::displayStatus()
     }
     for (const Pla::ComKitchen &kitchen : this->kitchen_list_) {
         std::cout << "Kitchen " << kitchen.pid << ":\n";
+        displayIngredient(kitchen);
+        std::cout << "Cook Activity:\n";
         displayCookWork(kitchen);
         std::cout << "Order queue:\n";
         displayWaitingOrder(kitchen);
