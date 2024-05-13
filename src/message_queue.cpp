@@ -22,9 +22,8 @@ Pla::MessageQueue::MessageQueue() : filename_("./msg_queue/")
     id_ = msgget(key_, 0666 | IPC_CREAT);
 }
 
-Pla::MessageQueue::MessageQueue(key_t key) : key_(key)
+Pla::MessageQueue::MessageQueue(key_t key) : key_(key), id_(msgget(key_, 0666 | IPC_CREAT))
 {
-    id_ = msgget(key_, 0666 | IPC_CREAT);
 }
 
 Pla::MessageQueue::~MessageQueue()

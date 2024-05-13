@@ -7,16 +7,16 @@
 
 #include "Reception.hpp"
 
-void Pla::Reception::displayCookWork(const Pla::ComKitchen &kitchen)
+void Pla::Reception::displayCookWork(const Pla::ComKitchen &kitchen) const
 {
     int nb_cook_disp = 0;
 
-    for (size_t i = 0; i < kitchen.order_.size(); ++i) {
-        if (kitchen.order_[i].state == Pla::PizzaState::WAITING_INGREDIENT
-        || kitchen.order_[i].state == Pla::PizzaState::CURRENTLY_COOKING) {
-            std::cout << "    Cook " << nb_cook_disp << ": Order " << kitchen.order_[i].nb
-                << ": " << kitchen.order_[i].type << ' ' << kitchen.order_[i].size
-                << ' ' << kitchen.order_[i].state << '\n';
+    for (const Pla::Order &order : kitchen.order_) {
+        if (order.state == Pla::PizzaState::WAITING_INGREDIENT
+        || order.state == Pla::PizzaState::CURRENTLY_COOKING) {
+            std::cout << "    Cook " << nb_cook_disp << ": Order " << order.nb
+                << ": " << order.type << ' ' << order.size
+                << ' ' << order.state << '\n';
             ++nb_cook_disp;
         }
     }
@@ -30,10 +30,10 @@ void Pla::Reception::displayWaitingOrder(const Pla::ComKitchen &kitchen)
 {
     size_t nb_waiting = 0;
 
-    for (size_t i = 0; i < kitchen.order_.size(); ++i) {
-        if (kitchen.order_[i].state == Pla::PizzaState::WAITING_TO_BE_COOK) {
-            std::cout << "    Order " << kitchen.order_[i].nb <<
-                ": " << kitchen.order_[i].type << ' ' << kitchen.order_[i].size << '\n';
+    for (const Pla::Order &order : kitchen.order_) {
+        if (order.state == Pla::PizzaState::WAITING_TO_BE_COOK) {
+            std::cout << "    Order " << order.nb <<
+                ": " << order.type << ' ' << order.size << '\n';
             ++nb_waiting;
         }
     }

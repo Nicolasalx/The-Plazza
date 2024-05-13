@@ -52,8 +52,8 @@ namespace Pla
         void handleRecvStatus(const std::list<Pla::ComKitchen>::iterator &it, const Pla::Message &msg);
         void dispatchOrder();
         void displayStatus();
-        void displayCookWork(const Pla::ComKitchen &kitchen);
-        void displayWaitingOrder(const Pla::ComKitchen &kitchen);
+        void displayCookWork(const Pla::ComKitchen &kitchen) const;
+        static void displayWaitingOrder(const Pla::ComKitchen &kitchen);
         void createKitchen();
         void closeAllKitchen();
     };
