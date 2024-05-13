@@ -16,7 +16,6 @@ namespace Pla
 {
     enum class PizzaType
     {
-        NO = 0,
         Regina = 1,
         Margarita = 2,
         Americana = 4,
@@ -25,7 +24,6 @@ namespace Pla
 
     enum class PizzaSize
     {
-        NO = 0,
         S = 1,
         M = 2,
         L = 4,
@@ -57,8 +55,8 @@ namespace Pla
     struct Order
     {
         int nb = 0;
-        Pla::PizzaType type = Pla::PizzaType::NO;
-        Pla::PizzaSize size = Pla::PizzaSize::NO;
+        Pla::PizzaType type = Pla::PizzaType::Regina;
+        Pla::PizzaSize size = Pla::PizzaSize::S;
         Pla::PizzaState state = Pla::PizzaState::WAITING_TO_BE_COOK;
     };
 
