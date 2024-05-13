@@ -61,9 +61,9 @@ std::vector<Pla::Order> Pla::ParseCommand::parsingCommand(const std::string &inp
         for (auto &token: allCommand) {
             analyseOneCommand(token, orderCommand);
         }
+        orderCommand++;
     } catch(const my::tracked_exception &exception) {
         printErrMess(exception.what());
     }
-    orderCommand++;
     return _allOrders;
 }
