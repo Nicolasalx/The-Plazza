@@ -65,5 +65,6 @@ namespace Pla
 
 std::ostream &operator << (std::ostream &output_stream, const Pla::PizzaType &pizza_type);
 std::ostream &operator << (std::ostream &output_stream, const Pla::PizzaSize &pizza_size);
+std::ostream &operator << (std::ostream &output_stream, const Pla::PizzaState &pizza_state);
 
 #endif /* !PLAZZA_HPP_ */

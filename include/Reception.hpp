@@ -25,7 +25,7 @@ namespace Pla
         int nb_used_cook = 0;
 
         ComKitchen() = default;
-        ComKitchen(pid_t pid_) : pid(pid_), send_msg_queue(), recv_msg_queue() {};
+        ComKitchen(pid_t pid_) : pid(pid_) {};
     };
 
     class Reception
@@ -52,6 +52,8 @@ namespace Pla
         void handleRecvStatus(const std::list<Pla::ComKitchen>::iterator &it, const Pla::Message &msg);
         void dispatchOrder();
         void displayStatus();
+        void displayCookWork(const Pla::ComKitchen &kitchen);
+        void displayWaitingOrder(const Pla::ComKitchen &kitchen);
         void createKitchen();
         void closeAllKitchen();
     };

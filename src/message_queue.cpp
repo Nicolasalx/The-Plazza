@@ -8,12 +8,11 @@
 #include "MessageQueue.hpp"
 #include <fstream>
 
-Pla::MessageQueue::MessageQueue()
+Pla::MessageQueue::MessageQueue() : filename_("./msg_queue/")
 {
     std::ofstream file;
     std::string charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-    filename_ = "./msg_queue/";
     for (int i = 0; i < 32; ++i) {
         filename_ += charset[std::rand() % charset.length()];
     }
@@ -30,7 +29,7 @@ Pla::MessageQueue::MessageQueue(key_t key) : key_(key)
 
 Pla::MessageQueue::~MessageQueue()
 {
-    msgctl(id_, IPC_RMID, NULL);
+    msgctl(id_, IPC_RMID, nullptr);
     if (!filename_.empty()) {
         std::remove(filename_.c_str());
     }

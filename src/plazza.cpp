@@ -50,3 +50,23 @@ std::ostream &operator << (std::ostream &output_stream, const Pla::PizzaSize &pi
     }
     return output_stream;
 }
+
+std::ostream &operator << (std::ostream &output_stream, const Pla::PizzaState &pizza_state)
+{
+    switch(pizza_state)
+    {
+        case Pla::PizzaState::WAITING_TO_BE_COOK:
+            output_stream << "[WAITING TO BE COOK]";
+            break;
+        case Pla::PizzaState::WAITING_INGREDIENT:
+            output_stream << "\e[93m[WAITING FOR INGREDIENT]\e[0m";
+            break;
+        case Pla::PizzaState::CURRENTLY_COOKING:
+            output_stream << "\e[96m[CURRENTLY COOK]\e[0m";
+            break;
+        case Pla::PizzaState::DONE:
+            output_stream << "[DONE]";
+            break;
+    }
+    return output_stream;
+}
