@@ -58,6 +58,8 @@ bool Pla::Cook::consumeIngrediant(Pla::PizzaType type, std::vector<int> &ingredi
         return true;
     }
         break;
+        default:
+            break;
     }
     return false;
 }

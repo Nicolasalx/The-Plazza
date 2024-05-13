@@ -14,6 +14,7 @@ void Pla::ParseCommand::analyseOneCommand(const std::string &command, int &order
 {
     Pla::Order order;
     std::vector<std::string> instructionCmd;
+    command_state_e cmd_state = NAME;
     int pizzaNumber = 0;
 
     my::split_string(command, " ", instructionCmd);
@@ -21,12 +22,20 @@ void Pla::ParseCommand::analyseOneCommand(const std::string &command, int &order
         throw my::tracked_exception("One command gived by the customer is empty!");
     }
     for (auto &inst: instructionCmd) {
-        if (order.type == Pla::PizzaType::NO) {
-            definePizzaType(order, inst);
-        } else if (order.size == Pla::PizzaSize::NO) {
-            definePizzaSize(order, inst);
-        } else {
-            definePizzaNumber(inst, pizzaNumber);
+        switch (cmd_state) {
+            case NAME:
+                definePizzaType(order, inst);
+                cmd_state = SIZE;
+                break;
+            case SIZE:
+                definePizzaSize(order, inst);
+                cmd_state = NUMBER;
+                break;
+            case NUMBER:
+                definePizzaNumber(inst, pizzaNumber);
+                break;
+            default:
+                break;
         }
     }
     if (pizzaNumber <= 0) {
