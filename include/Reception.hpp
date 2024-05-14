@@ -23,6 +23,7 @@ namespace Pla
         Pla::MessageQueue recv_msg_queue;
         std::vector<Pla::Order> order_;
         int nb_used_cook = 0;
+        std::array<int, int(Pla::Ingredient::NbIngredient)> ingredient;
 
         ComKitchen() = default;
         ComKitchen(pid_t pid_) : pid(pid_) {};
@@ -53,6 +54,7 @@ namespace Pla
         void dispatchOrder();
         void displayStatus();
         void displayCookWork(const Pla::ComKitchen &kitchen) const;
+        void displayIngredient(const Pla::ComKitchen &kitchen) const;
         static void displayWaitingOrder(const Pla::ComKitchen &kitchen);
         void createKitchen();
         void closeAllKitchen();

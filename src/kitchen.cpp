@@ -8,8 +8,10 @@
 #include "Kitchen.hpp"
 #include "my_tracked_exception.hpp"
 
-Pla::Kitchen::Kitchen(std::size_t nb_cook, double cook_time, long ing_repl_time, key_t send_msg_key, key_t recv_msg_key)
-    : cook_time_(cook_time), ing_repl_time_(ing_repl_time), has_order_(false), exit_(false)
+Pla::Kitchen::Kitchen(std::size_t nb_cook, double cook_time,
+    long ing_repl_time, key_t send_msg_key, key_t recv_msg_key)
+    : cook_time_(cook_time), ing_repl_time_(ing_repl_time),
+    has_order_(false), exit_(false)
 {
     cook_.launch(nb_cook);
     ingredient_.resize(static_cast<std::size_t>(Pla::Ingredient::NbIngredient), 5);
@@ -72,6 +74,13 @@ void Pla::Kitchen::sendStatus()
     this->mutex_.unlock();
 }
 
+void Pla::Kitchen::sendIngredient()
+{
+    this->mutex_.lock();
+    this->send_msg_queue_->push(Pla::Message(Pla::MessageType::INGREDIENT_STATUS, this->ingredient_));
+    this->mutex_.unlock();
+}
+
 void Pla::Kitchen::loop()
 {
     Pla::Message msg;
@@ -93,6 +102,7 @@ void Pla::Kitchen::loop()
             handleNewMessage(msg);
         }
         sendStatus();
+        sendIngredient();
         std::this_thread::sleep_for(std::chrono::milliseconds(33));
     }
     this->exit_ = true;

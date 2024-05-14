@@ -19,6 +19,7 @@ namespace Pla
         START_STATUS,
         PIZZA_STATUS,
         PIZZA_DONE,
+        INGREDIENT_STATUS,
         CLOSE_KITCHEN
     };
 
@@ -31,6 +32,7 @@ namespace Pla
         long order_size = 0;
         long order_state = 0;
         long cook_used = 0;
+        int ingredient[int(Pla::Ingredient::NbIngredient)] = {0};
     };
 
     class Message
@@ -40,6 +42,7 @@ namespace Pla
             Pla::MessageType type_ = Pla::MessageType::NOT_INIT;
             Pla::Order order_;
             int cook_used_ = 0;
+            std::array<int, int(Pla::Ingredient::NbIngredient)> ingredient_;
         };
         MsgData msg_data;
 
@@ -49,11 +52,13 @@ namespace Pla
         Message(Pla::MessageType type);
         Message(Pla::MessageType type, Pla::Order order);
         Message(Pla::MessageType type, int cook_used);
+        Message(Pla::MessageType type, const std::vector<int> &ingredient);
         ~Message() = default;
 
         Pla::MessageType getType() const;
         Pla::Order getOrder() const;
         int getCookUsed() const;
+        std::array<int, int(Pla::Ingredient::NbIngredient)> getIngredient() const;
 
         Pla::PackedMessage pack() const;
     };

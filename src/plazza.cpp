@@ -74,3 +74,37 @@ std::ostream &operator << (std::ostream &output_stream, const Pla::PizzaState &p
     }
     return output_stream;
 }
+
+std::ostream &operator << (std::ostream &output_stream, const Pla::Ingredient &ingredient)
+{
+    switch(ingredient)
+    {
+        case Pla::Ingredient::Tomato:
+            output_stream << "Tomato";
+            break;
+        case Pla::Ingredient::Gruyere:
+            output_stream << "Gruyere";
+            break;
+        case Pla::Ingredient::Ham:
+            output_stream << "Ham";
+            break;
+        case Pla::Ingredient::Mushrooms:
+            output_stream << "Mushrooms";
+            break;
+        case Pla::Ingredient::Steak:
+            output_stream << "Steak";
+            break;
+        case Pla::Ingredient::Eggplant:
+            output_stream << "Eggplant";
+            break;
+        case Pla::Ingredient::GoatCheese:
+            output_stream << "GoatCheese";
+            break;
+        case Pla::Ingredient::ChiefLove:
+            output_stream << "ChiefLove";
+            break;
+        default:
+            break;
+    }
+    return output_stream;
+}
