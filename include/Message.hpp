@@ -61,6 +61,37 @@ namespace Pla
         std::array<int, int(Pla::Ingredient::NbIngredient)> getIngredient() const;
 
         Pla::PackedMessage pack() const;
+
+        friend std::ostream &operator << (std::ostream &output_stream, const Pla::Message &message)
+        {
+            Pla::PackedMessage packed_message = message.pack();
+            output_stream << packed_message.type
+               << packed_message.order_nb
+               << packed_message.order_state
+               << packed_message.order_type
+               << packed_message.order_size
+               << packed_message.cook_used;
+            for (size_t i = 0; i < int(Pla::Ingredient::NbIngredient); ++i) {
+                output_stream << packed_message.ingredient[i];
+            }
+            return output_stream;
+        }
+
+        friend std::istream &operator >> (std::istream &input_stream, Pla::Message &message)
+        {
+            Pla::PackedMessage packed_message;
+            input_stream >> packed_message.type
+               >> packed_message.order_nb
+               >> packed_message.order_state
+               >> packed_message.order_type
+               >> packed_message.order_size
+               >> packed_message.cook_used;
+            for (size_t i = 0; i < int(Pla::Ingredient::NbIngredient); ++i) {
+                input_stream >> packed_message.ingredient[i];
+            }
+            message = Pla::Message(packed_message);
+            return input_stream;
+        }
     };
 }
 
