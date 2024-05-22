@@ -64,6 +64,7 @@ std::vector<Pla::Order> Pla::ParseCommand::parsingCommand(const std::string &inp
         orderCommand++;
     } catch(const my::tracked_exception &exception) {
         printErrMess(exception.what());
+        _allOrders.clear();
     }
     return _allOrders;
 }
