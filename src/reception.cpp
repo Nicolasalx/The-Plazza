@@ -26,7 +26,6 @@ Pla::Reception::Reception(int argc, const char **argv) : exit_(false)
     } else if (argc == 5) {
         throw my::tracked_exception("The number of arguments are at 5 but with 5 args you need to have --graphical.");
     }
-
     if (this->cooking_time_ < 0 ||
         this->nb_cook_ <= 0 ||
         this->ing_repl_time_ < 0) {

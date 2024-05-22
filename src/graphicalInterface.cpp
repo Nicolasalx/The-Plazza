@@ -123,6 +123,12 @@ void Pla::GraphicalInterface::createGrid(float boxWidth, float boxHeight, int co
 
 void Pla::GraphicalInterface::addEachKitchen(const std::list<Pla::ComKitchen> &kitchen_list)
 {
+    if (_nbKitchen == 0) {
+        _kitchenSelectionned.all_data.listIngredients.clear();
+        _kitchenSelectionned.all_data.listText.clear();
+        return;
+    }
+
     int columns = static_cast<int>(std::sqrt(_nbKitchen));
     int rows = (_nbKitchen + columns - 1) / columns;
     float boxWidth = 1120 / columns;
@@ -147,9 +153,6 @@ void Pla::GraphicalInterface::manageKitchen(const std::list<Pla::ComKitchen> &ki
     std::size_t numberOfKitchen = kitchen_list.size();
     mutex.unlock();
 
-    if (numberOfKitchen <= 0) {
-        return;
-    }
     _listKitchen.clear();
     _nbKitchen = numberOfKitchen;
     mutex.lock();
@@ -237,9 +240,7 @@ void Pla::GraphicalInterface::printAllKitchen(sf::RenderWindow &window, sf::Vect
         window.draw(kitchen.text);
         ++idx;
     }
-    if (_kitchenHasBeenSelected) {
-        drawInfosKitchen(window);
-    }
+    drawInfosKitchen(window);
 }
 
 void Pla::GraphicalInterface::launch(const std::list<Pla::ComKitchen> &kitchen_list, std::mutex &mutex)
