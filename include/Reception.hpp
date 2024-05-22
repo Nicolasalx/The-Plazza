@@ -13,22 +13,11 @@
     #include <list>
     #include <queue>
     #include <fstream>
+    #include "GraphicalInterface.hpp"
+    #include "ComKitchen.hpp"
 
 namespace Pla
 {
-    struct ComKitchen
-    {
-        pid_t pid;
-        Pla::MessageQueue send_msg_queue;
-        Pla::MessageQueue recv_msg_queue;
-        std::vector<Pla::Order> order_;
-        int nb_used_cook = 0;
-        std::array<int, int(Pla::Ingredient::NbIngredient)> ingredient;
-
-        ComKitchen() = default;
-        ComKitchen(pid_t pid_) : pid(pid_) {};
-    };
-
     class Reception
     {
     private:
@@ -41,6 +30,8 @@ namespace Pla
         std::mutex mutex_;
         std::atomic_bool exit_;
         std::ofstream log_file_;
+        Pla::GraphicalInterface graphicalInterface;
+        std::atomic_bool isGraphical_ = false;
 
     public:
         Reception(int argc, const char **argv);

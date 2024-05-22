@@ -10,6 +10,8 @@ SRC				:=	$(shell find src/ -name "*.cpp")
 CPPFLAGS		=	-std=c++20 -Wall -Wextra \
 					$(ADDITIONAL_FLAGS)
 
+LDFLAGS 		= 	-lsfml-graphics -lsfml-window -lsfml-system
+
 INCLUDE_PATH	=	-I./include/ -I./include/lib \
 
 NAME			=	plazza
@@ -27,13 +29,13 @@ NAME_TESTS		=	unit_tests
 OBJ				=	$(SRC:.cpp=.o)
 
 %.o: %.cpp
-	@g++ $(CPPFLAGS) $(INCLUDE_PATH) -c $< -o $@ && \
+	@g++ $(CPPFLAGS) $(INCLUDE_PATH) -c $< -o $@ $(LDFLAGS) && \
 	printf "[\e[92mOK\e[0m] g++ $(CPPFLAGS) -c $< -o $@\n" || \
 	printf "[\e[1;91mKO\e[0m] g++ $(CPPFLAGS) -c $< -o $@\n"
 
 $(NAME): $(OBJ)
 	@cd $(LIB_PATH) && $(MAKE) ADDITIONAL_FLAGS="$(ADDITIONAL_FLAGS)"
-	@if g++ -o $(NAME) $(OBJ) $(LIB_NAME) $(CPPFLAGS) $(INCLUDE_PATH); then \
+	@if g++ -o $(NAME) $(OBJ) $(LIB_NAME) $(CPPFLAGS) $(INCLUDE_PATH) $(LDFLAGS); then \
 		printf "[\e[92mCOMPILATION OK\e[0m] "; \
 		printf "g++ -o $(NAME) $(OBJ) $(LIB_NAME) $(CPPFLAGS)\n"; \
 	else \
