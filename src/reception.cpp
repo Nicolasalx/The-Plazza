@@ -14,16 +14,18 @@
 
 Pla::Reception::Reception(int argc, const char **argv) : exit_(false)
 {
-    if (argc != 4) {
+    if (argc != 4 && argc != 5) {
         throw my::tracked_exception("Invalid number of arg.");
     }
     this->cooking_time_ = std::stod(argv[1]);
     this->nb_cook_ = std::stoi(argv[2]);
     this->ing_repl_time_ = std::stol(argv[3]);
 
-    this->isGraphical_ = true;
-    // Graphical
-    // bool isGraphical_
+    if (argc == 5 && std::strcmp(argv[4], "--graphical") == 0) {
+        this->isGraphical_ = true;
+    } else if (argc == 5) {
+        throw my::tracked_exception("The number of arguments are at 5 but with 5 args you need to have --graphical.");
+    }
 
     if (this->cooking_time_ < 0 ||
         this->nb_cook_ <= 0 ||
@@ -60,10 +62,14 @@ void Pla::Reception::handleInput(const std::string &input)
 void Pla::Reception::openPlazza()
 {
     std::thread kitchen_manager([this]{manageKitchen();});
+    std::thread graphical_interface_manager;
 
-    //if (this->isGraphical_ == true) {
-        std::thread graphical_interface_manager([this]{this->graphicalInterface.launch(this->kitchen_list_, this->mutex_, this->exit_);});
-    //}
+    if (this->isGraphical_) {
+        graphical_interface_manager = std::thread([this] {
+            this->graphicalInterface.launch(this->kitchen_list_, this->mutex_);
+        });
+    }
+
     std::string input;
 
     while (true) {
@@ -74,6 +80,9 @@ void Pla::Reception::openPlazza()
         handleInput(input);
     }
     this->exit_ = true;
+    if (graphical_interface_manager.joinable()) {
+        graphical_interface_manager.join();
+    }
     kitchen_manager.join();
     closeAllKitchen();
 }

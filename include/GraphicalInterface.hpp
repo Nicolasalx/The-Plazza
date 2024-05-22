@@ -46,8 +46,8 @@ namespace Pla
             GraphicalInterface() = default;
             ~GraphicalInterface() = default;
 
-            void launch(const std::list<Pla::ComKitchen> &kitchen_list, std::mutex &mutex, std::atomic_bool &exit);
-            void addEachKitchen(const std::list<Pla::ComKitchen> &kitchen_list, std::mutex &mutex);
+            void launch(const std::list<Pla::ComKitchen> &kitchen_list, std::mutex &mutex);
+            void addEachKitchen(const std::list<Pla::ComKitchen> &kitchen_list);
             void manageKitchen(const std::list<Pla::ComKitchen> &kitchen_list, std::mutex &mutex);
             void initFont();
             void handleEvent(sf::RenderWindow &window);
