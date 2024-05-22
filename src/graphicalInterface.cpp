@@ -190,6 +190,13 @@ void Pla::GraphicalInterface::handleEvent(sf::RenderWindow &window)
 
 void Pla::GraphicalInterface::drawInfosKitchen(sf::RenderWindow &window)
 {
+    for (const auto &kitchen: _listKitchen) {
+        if (kitchen.id == _kitchenSelectionned.id) {
+            _kitchenSelectionned.all_data.listIngredients = kitchen.all_data.listIngredients;
+            _kitchenSelectionned.all_data.listText = kitchen.all_data.listText;
+        }
+    }
+
     for (const auto &ingredient: _kitchenSelectionned.all_data.listIngredients) {
         window.draw(ingredient);
     }
