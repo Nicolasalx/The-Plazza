@@ -42,7 +42,7 @@ namespace Pla
             Pla::MessageType type_ = Pla::MessageType::NOT_INIT;
             Pla::Order order_;
             int cook_used_ = 0;
-            std::array<int, int(Pla::Ingredient::NbIngredient)> ingredient_;
+            std::array<int, int(Pla::Ingredient::NbIngredient)> ingredient_ = {0};
         };
         MsgData msg_data;
 
