@@ -27,7 +27,11 @@ void Pla::Reception::createKitchen()
         Pla::Kitchen kitchen(
             nb_cook_, cooking_time_, ing_repl_time_, send_key, recv_key
         );
-        std::exit(0);
+        if (this->isGraphical_) {
+            _exit(0);
+        } else {
+            std::exit(0);
+        }
     }
     this->mutex_.lock();
     std::cout << "\e[92mKitchen " << pid << " created !\e[0m\n";
