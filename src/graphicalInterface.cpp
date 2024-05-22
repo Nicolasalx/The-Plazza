@@ -121,7 +121,7 @@ void Pla::GraphicalInterface::createGrid(float boxWidth, float boxHeight, int co
     kitchen.orderIsEmpty = kitch.order_.empty();
 }
 
-void Pla::GraphicalInterface::addEachKitchen(const std::list<Pla::ComKitchen> &kitchen_list, std::mutex &mutex)
+void Pla::GraphicalInterface::addEachKitchen(const std::list<Pla::ComKitchen> &kitchen_list)
 {
     int columns = static_cast<int>(std::sqrt(_nbKitchen));
     int rows = (_nbKitchen + columns - 1) / columns;
@@ -153,7 +153,7 @@ void Pla::GraphicalInterface::manageKitchen(const std::list<Pla::ComKitchen> &ki
     _listKitchen.clear();
     _nbKitchen = numberOfKitchen;
     mutex.lock();
-    addEachKitchen(kitchen_list, mutex);
+    addEachKitchen(kitchen_list);
     mutex.unlock();
 }
 
@@ -242,7 +242,7 @@ void Pla::GraphicalInterface::printAllKitchen(sf::RenderWindow &window, sf::Vect
     }
 }
 
-void Pla::GraphicalInterface::launch(const std::list<Pla::ComKitchen> &kitchen_list, std::mutex &mutex, std::atomic_bool &exit)
+void Pla::GraphicalInterface::launch(const std::list<Pla::ComKitchen> &kitchen_list, std::mutex &mutex)
 {
     sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "The plazza management");
     sf::RectangleShape middleBar(sf::Vector2f(100.f, 100.f));
